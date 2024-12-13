@@ -1,0 +1,50 @@
+.requests-container {
+  max-width: 800px; /* Set a maximum width for the container */
+  margin: 20px auto; /* Center the container with auto margins */
+  padding: 20px; /* Add padding inside the container */
+  background-color: #fff; /* White background for the container */
+  border-radius: 8px; /* Rounded corners */
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+}
+
+.requests-container h2 {
+  text-align: center; /* Center the heading */
+  color: #333; /* Dark color for the text */
+}
+
+table {
+  width: 100%; /* Full width for the table */
+  border-collapse: collapse; /* Collapse borders for clean look */
+  margin-top: 20px; /* Space above the table */
+}
+
+th, td {
+  padding: 12px; /* Padding for table cells */
+  text-align: left; /* Align text to the left */
+  border: 1px solid #ccc; /* Light gray border */
+}
+
+th {
+  background-color: #f4f4f4; /* Light gray background for header */
+  color: #555; /* Darker text color for headers */
+}
+
+button {
+  padding: 8px 12px; /* Padding for buttons */
+  background-color: #007bff; /* Blue background for buttons */
+  color: white; /* White text color */
+  border: none; /* Remove border */
+  border-radius: 4px; /* Rounded corners */
+  cursor: pointer; /* Pointer cursor on hover */
+  transition: background-color 0.3s ease; /* Smooth background color change */
+}
+
+button:hover {
+  background-color: #0056b3; /* Darker blue on hover */
+}
+
+.no-requests {
+  text-align: center; /* Center text for no requests message */
+  font-style: italic; /* Italic style for the message */
+  color: #777; /* Gray color for the message */
+}
