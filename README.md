@@ -1,4 +1,0 @@
-# Pharmacy
-
-fullstack development
-

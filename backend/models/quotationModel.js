@@ -1,16 +1,13 @@
-// models/Quotation.js
 import mongoose from "mongoose";
 
 const quotationSchema = new mongoose.Schema({
-    prescription_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Prescription', required: true },
-    pharmacy_id: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-    amount: { type: Number, required: true },
-    status: { 
-        type: String, 
-        enum: ['Sent', 'Accepted', 'Rejected'], 
-        default: 'Sent' 
-    },
-}, { minimize: false });
+    
+    drug: { type: Array, required:true},
+    quantity: { type: Number, required: true},
+    address:{type:Object,required:true},
+    date: {type:Date,default:Date.now()},
+    payment:{type:Boolean,default:false}
+})
 
-const quotationModel = mongoose.models.Quotation || mongoose.model("Quotation", quotationSchema);
+const quotationModel = mongoose.models.order || mongoose.model("order", quotationSchema);
 export default quotationModel;

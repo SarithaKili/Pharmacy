@@ -1,55 +1,45 @@
-import prescriptionModel from "../models/prescriptionModel.js";
-import fs from 'fs'
+import prescriptionModel from '../models/prescriptionModel.js'; // Ensure the correct file extension
+import fs from 'fs';
 
-// add food
+// Add prescription
 const addPrescription = async (req, res) => {
     try {
-      if (!req.file) {
-        return res.status(400).json({ success: false, message: "No file uploaded." });
-      }
-  
-      const image_filename = req.file.filename; // Ensure this matches your upload key
-  
-      const prescription = new prescriptionModel({
-        address: req.body.address,
-        note: req.body.note,
-        image: image_filename
-      });
-  
-      await prescription.save();
-      res.json({ success: true, message: "Prescription added" });
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({ success: false, message: "Error saving prescription" });
-    }
-  };
-//all Prescription list
-const listPrescription=async(req,res)=>{
-    try{
-        const prescription=await prescriptionModel.find({});
-        res.json({success:true,data:prescription})
-    }catch(error){
-        res.json({success:false,message:"error"})
-    }
+        let image_filename = req.image.filename; // Ensure req.image is defined
 
-}
+        const prescription = new prescriptionModel({
+            address: req.body.address, // Corrected to use req.body.address
+            userNote: req.body.description,
+            image: image_filename,
+        });
 
-// delete Prescription
-const removePrescription = async (req, res) => {
-    try {
-
-        const Prescription = await PrescriptionModel.findById(req.body.id);
-        fs.unlink(`uploads/${Prescription.image}`, () => { })
-
-        await PrescriptionModel.findByIdAndDelete(req.body.id)
-        res.json({ success: true, message: "Prescription Removed" })
-
+        await prescription.save();
+        res.json({ success: true, message: "Prescription added" });
     } catch (error) {
         console.log(error);
-        res.json({ success: false, message: "Error" })
+        res.json({ success: false, message: "Error adding prescription" }); // Improved error message
     }
+};
 
-}
+// Delete prescription
+const removePrescription = async (req, res) => {
+    try {
+        const prescription = await prescriptionModel.findById(req.body.id);
+        if (!prescription) {
+            return res.status(404).json({ success: false, message: "Prescription not found" }); // Check if prescription exists
+        }
 
+        fs.unlink(`uploads/${prescription.image}`, (err) => {
+            if (err) {
+                console.error("Error deleting image file:", err); // Log any errors during deletion
+            }
+        });
 
-export {addPrescription,listPrescription,removePrescription}
+        await prescriptionModel.findByIdAndDelete(req.body.id);
+        res.json({ success: true, message: "Prescription removed" });
+    } catch (error) {
+        console.log(error);
+        res.json({ success: false, message: "Error removing prescription" }); // Improved error message
+    }
+};
+
+export { addPrescription, removePrescription };

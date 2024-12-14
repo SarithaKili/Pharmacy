@@ -1,0 +1,74 @@
+.quotation-container {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    background-color: #98ddd1;
+}
+
+.prescription-section {
+    flex: 1;
+    margin-right: 20px;
+    border-right: 1px solid #ccc;
+    padding-right: 20px;
+}
+
+.image-preview {
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 10px;
+}
+
+.image-preview img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    margin-right: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+.quotation-form {
+    flex: 1;
+    padding-left: 20px;
+}
+
+.input-group {
+    margin-bottom: 15px;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.drug-item {
+    margin-top: 5px;
+}
+
+.total-amount {
+    margin-top: 20px;
+    font-weight: bold;
+}
+
+.send-quotation {
+    margin-top: 20px;
+    padding: 10px;
+    background-color: #5bc3ec;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.send-quotation:hover {
+    background-color: #4cf386;
+}

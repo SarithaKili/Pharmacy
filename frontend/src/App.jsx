@@ -1,41 +1,39 @@
-import React, { useState } from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
-import Registration from './pages/Registration/Registration'; // Ensure correct path
-
-
-
-import UploadImage from './pages/uploadImage/uploadImage';
-import Login from './pages/login.jsx/login';
-import PatientRequests from './pages/Request/PatientRequests';
-import Quotation from './pages/Quotation/Quotation';
-
+import { useState } from 'react';
+import RegisterUser from './pages/RegisterUser/RegisterUser.jsx';
+import LoginUser from './pages/LoginUser/LoginUser.jsx';
+import UploadPrescription from './pages/UploadPrescription/UploadPrescription.jsx';
+import CreateQuotation from './pages/CreateQuotation/CreateQuotation.jsx';
 
 function App() {
-  const [role, setRole] = useState(null); // State to store user role
-  const [email, setEmail] = useState(''); // State to store user email
+    const [userRole, setUserRole] = useState(null); // State to store the user's role
 
-  return (
-    <Router>
-      <div>
-        <Routes>
-          <Route path='/' element={<Registration />} />
-          <Route path='/login' element={<Login setRole={setRole} setEmail={setEmail} />} />
-          <Route 
-            path='/upload' 
-            element={role === "Patient" ? <UploadImage email={email} /> : <Navigate to="/login" />} 
-          />
-          <Route 
-            path='/requests' 
-            element={role === "Pharmacist" ? <PatientRequests /> : <Navigate to="/login" />} 
-          />
-          <Route 
-            path='/quotation/:id' // Route for Quotation page with ID
-            element={role === "Pharmacist" ? <Quotation /> : <Navigate to="/login" />} 
-          />
-        </Routes>
-      </div>
-    </Router>
-  );
+    const handleLogin = (role) => {
+        setUserRole(role); // Set the user's role upon login
+    };
+
+    return (
+        <Router>
+            <div>
+                <Routes>
+                    <Route path='/' element={<RegisterUser />} />
+                    <Route 
+                        path='/login' 
+                        element={<LoginUser onLogin={handleLogin} />} 
+                    />
+                    <Route path='/uploadprescription' element={
+                        (() => {
+                            if (userRole === 'patient') {
+                                return <UploadPrescription />;
+                            } else {
+                                return <CreateQuotation />;
+                            }
+                        })()
+                    } />
+                </Routes>
+            </div>
+        </Router>
+    );
 }
 
 export default App;

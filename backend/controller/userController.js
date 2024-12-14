@@ -1,16 +1,21 @@
-import userModel from "../models/userModel.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
-import validator from "validator";
+import userModel from "../models/userModel.js";
 
-// Create token
+// Create a token
 const createToken = (id) => {
-    return jwt.sign({ id }, process.env.JWT_SECRET);
+    return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: '1h' });
 }
 
 // Login user
 const loginUser = async (req, res) => {
     const { email, password } = req.body;
+
+    // Validate input
+    if (!email || !password) {
+        return res.json({ success: false, message: "Email and password are required" });
+    }
+
     try {
         const user = await userModel.findOne({ email });
 
@@ -25,16 +30,22 @@ const loginUser = async (req, res) => {
         }
 
         const token = createToken(user._id);
-        res.json({ success: true, token });
+        res.json({ success: true, token, userRole: user.userRole });
     } catch (error) {
-        console.log(error);
-        res.json({ success: false, message: "Error" });
+        console.log("Login error:", error);
+        res.json({ success: false, message: "Error logging in" });
     }
 }
 
 // Register user
 const registerUser = async (req, res) => {
-    const { name, email, password, dob, role } = req.body; // Include dob and role
+    const { name, email, password, address, contact, dob, userRole } = req.body;
+
+    // Validate input
+    if (!name || !email || !password || !address || !contact || !dob || !userRole) {
+        return res.json({ success: false, message: "All fields are required" });
+    }
+
     try {
         // Check if user already exists
         const exists = await userModel.findOne({ email });
@@ -42,32 +53,25 @@ const registerUser = async (req, res) => {
             return res.json({ success: false, message: "User already exists" });
         }
 
-        // Validate email format & strong password
-        if (!validator.isEmail(email)) {
-            return res.json({ success: false, message: "Please enter a valid email" });
-        }
-        if (password.length < 8) {
-            return res.json({ success: false, message: "Please enter a strong password" });
-        }
-        if (!dob) {
-            return res.json({ success: false, message: "Date of birth is required" });
-        }
-        if (!['User', 'Pharmacy'].includes(role)) {
-            return res.json({ success: false, message: "Role must be either 'User' or 'Pharmacy'" });
-        }
-
         // Hashing user password
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
 
-        const newUser = new userModel({ name, email, password: hashedPassword, dob, role }); // Include dob and role
-        const user = await newUser.save();
-        const token = createToken(user._id);
-        res.json({ success: true, token });
-
+        const newUser = new userModel({
+            name,
+            email,
+            password: hashedPassword,
+            address,
+            contact,
+            dob,
+            userRole
+        });
+        await newUser.save();
+        const token = createToken(newUser._id);
+        res.json({ success: true, token, userRole: newUser.userRole });
     } catch (error) {
-        console.log(error);
-        res.json({ success: false, message: "Error" });
+        console.log("Registration error:", error);
+        res.json({ success: false, message: "Error registering user" });
     }
 }
 
